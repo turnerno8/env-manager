@@ -1,4 +1,4 @@
-name: Deploy Migrations to Staging
+name: Deploy DEV to Demo
 
 on:
   # push:
