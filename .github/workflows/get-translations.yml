@@ -27,7 +27,7 @@ jobs:
           db: ${{ env.PG_DB }}
           ssl: false
           from_file: false
-          to_file: true
+          to_file: false
       - name: create-seed.sql
         run: |
           echo "Expecting [{result:true}]"
