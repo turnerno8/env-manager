@@ -19,7 +19,7 @@ jobs:
         uses: yakubique/query-postgresql@v1.2
         with:
           query: |
-              SELECT 'INSERT INTO translations (id, key, language, translation, context, created_at, updated_at) VALUES (''' || id || ''', ''' || key || ''', ''' || language || ''', ''' || translation || ''', ''' || context || ''', ''' || created_at || ''', ''' || updated_at || ''') ON CONFLICT (id) DO UPDATE SET key = EXCLUDED.key, language = EXCLUDED.language, translation = EXCLUDED.translation, context = EXCLUDED.context, created_at = EXCLUDED.created_at, updated_at = EXCLUDED.updated_at FROM translations
+              SELECT 'INSERT INTO translations (id, key, language, translation, context, created_at, updated_at) VALUES (''' || id || ''', ''' || key || ''', ''' || language || ''', ''' || translation || ''', ''' || context || ''', ''' || created_at || ''', ''' || updated_at || ''') ON CONFLICT (id) DO UPDATE SET key = EXCLUDED.key, language = EXCLUDED.language, translation = EXCLUDED.translation, context = EXCLUDED.context, updated_at = EXCLUDED.updated_at' FROM translations
           host: ${{ env.PG_HOST }}
           port: ${{ env.PG_PORT }}
           username: ${{ env.PG_USER }}
