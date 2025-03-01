@@ -22,7 +22,7 @@ jobs:
 
       - name: Run SQL statement
         run: |
-          psql -h ${{ env.PG_HOST }} -U ${{ env.PG_USER }} -d ${{ env.PG_DB }} -c "SELECT 'INSERT INTO translations (id, key, language, translation, context, created_at, updated_at) VALUES (''' || id || ''', ''' || key || ''', ''' || language || ''', ''' || translation || ''', ''' || COALESCE(context, 'NULL') || ''', ''' || created_at || ''', ''' || updated_at || ''') ON CONFLICT (id) DO UPDATE SET key = EXCLUDED.key, language = EXCLUDED.language, translation = EXCLUDED.translation, context = EXCLUDED.context, updated_at = EXCLUDED.updated_at' FROM translations" -t -o seed.sql
+          psql -h ${{ env.PG_HOST }} -U ${{ env.PG_USER }} -d ${{ env.PG_DB }} -c "SELECT 'INSERT INTO translations (id, key, language, translation, context, created_at, updated_at) VALUES (''' || id || ''', ''' || key || ''', ''' || language || ''', ''' || translation || ''', ''' || COALESCE(context, 'NULL') || ''', ''' || created_at || ''', ''' || updated_at || ''') ON CONFLICT (id) DO UPDATE SET key = EXCLUDED.key, language = EXCLUDED.language, translation = EXCLUDED.translation, context = EXCLUDED.context, updated_at = EXCLUDED.updated_at;' FROM translations" -t -o seed.sql
         env:
           PGPASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
       - name: Rename and move SQL file
