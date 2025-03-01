@@ -1,40 +1,42 @@
-workflow_dispatch:
+name: Dump Translations
+on:
+  workflow_dispatch:
 
-jobs:
-  dump-translations-table:
-    runs-on: [ "ubuntu-latest" ]
-    env:
-      PG_HOST: ${{ secrets.DEV_DB_HOSTNAME }}
-      PG_PORT: 5432
-      PG_USER: ${{ secrets.DEV_DB_USER }}
-      PG_PWD: ${{ secrets.STAGING_DB_PASSWORD }}
-      PG_DB: postgres
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: File query
-        id: query
-        uses: ./ # Uses an action in the root directory
-        with:
-          query: |
-              SELECT 'INSERT INTO translations (id, key, language, translation, context, created_at, updated_at) VALUES (''' || id || ''', ''' || key || ''', ''' || language || ''', ''' || translation || ''', ''' || context || ''', ''' || created_at || ''', ''' || updated_at || ''') ON CONFLICT (id) DO UPDATE SET key = EXCLUDED.key, language = EXCLUDED.language, translation = EXCLUDED.translation, context = EXCLUDED.context, created_at = EXCLUDED.created_at, updated_at = EXCLUDED.updated_at FROM translations
-          host: ${{ env.PG_HOST }}
-          port: ${{ env.PG_PORT }}
-          username: ${{ env.PG_USER }}
-          password: ${{ env.PG_PWD }}
-          db: ${{ env.PG_DB }}
-          ssl: true
-          from_file: false
-          to_file: true
-      - name: create-seed.sql
-        run: |
-          echo "Expecting [{result:true}]"
-          cat "${{ steps.query.outputs.result }}" > supabase/seed.sql
-      - name: Commit and Push Changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-          git add .
-          git commit -m "Update Supabase DB schema" || echo "No changes to commit"
-          git push
+  jobs:
+    dump-translations-table:
+      runs-on: [ "ubuntu-latest" ]
+      env:
+        PG_HOST: ${{ secrets.DEV_DB_HOSTNAME }}
+        PG_PORT: 5432
+        PG_USER: ${{ secrets.DEV_DB_USER }}
+        PG_PWD: ${{ secrets.STAGING_DB_PASSWORD }}
+        PG_DB: postgres
+      steps:
+        - uses: actions/checkout@v3
+  
+        - name: File query
+          id: query
+          uses: ./ # Uses an action in the root directory
+          with:
+            query: |
+                SELECT 'INSERT INTO translations (id, key, language, translation, context, created_at, updated_at) VALUES (''' || id || ''', ''' || key || ''', ''' || language || ''', ''' || translation || ''', ''' || context || ''', ''' || created_at || ''', ''' || updated_at || ''') ON CONFLICT (id) DO UPDATE SET key = EXCLUDED.key, language = EXCLUDED.language, translation = EXCLUDED.translation, context = EXCLUDED.context, created_at = EXCLUDED.created_at, updated_at = EXCLUDED.updated_at FROM translations
+            host: ${{ env.PG_HOST }}
+            port: ${{ env.PG_PORT }}
+            username: ${{ env.PG_USER }}
+            password: ${{ env.PG_PWD }}
+            db: ${{ env.PG_DB }}
+            ssl: true
+            from_file: false
+            to_file: true
+        - name: create-seed.sql
+          run: |
+            echo "Expecting [{result:true}]"
+            cat "${{ steps.query.outputs.result }}" > supabase/seed.sql
+        - name: Commit and Push Changes
+          run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+  
+            git add .
+            git commit -m "Update Supabase DB schema" || echo "No changes to commit"
+            git push
