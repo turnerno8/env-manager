@@ -1,10 +1,20 @@
-name: Deploy DEV to Demo
+name: Deploy DEV to Environment
 
 on:
   # push:
   #   branches:
   #     - develop
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy DB to'
+        required: true
+        default: 'DEMO'
+        type: choice
+        options:
+          - ATAKER-PROD
+          - DEMO
+          - MUT-PROD
 
 jobs:
   deploy:

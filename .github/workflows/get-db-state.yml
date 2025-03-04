@@ -1,14 +1,23 @@
 name: Get DB State
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to get DB state from'
+        required: true
+        default: 'DEMO'
+        type: choice
+        options:
+          - ATAKER-PROD
+          - DEMO
+          - MUT-PROD
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: MUT-PROD
+    environment: ${{ github.event.inputs.environment }}
 
     env:
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SUPABASE_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
