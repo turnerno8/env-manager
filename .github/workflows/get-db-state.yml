@@ -1,4 +1,4 @@
-name: Get Dev Setup
+name: Get DB State
 on:
   workflow_dispatch:
 
