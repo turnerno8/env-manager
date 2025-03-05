@@ -1,4 +1,4 @@
-name: Deploy DEV to Environment
+name: Deploy to Environment
 
 on:
   # push:
@@ -35,3 +35,4 @@ jobs:
 
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - run: supabase db push --include-seed --debug
+      - run: supabase functions deploy --project-ref $SUPABASE_PROJECT_ID
