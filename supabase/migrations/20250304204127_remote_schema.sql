@@ -248,51 +248,6 @@ CREATE TABLE IF NOT EXISTS "public"."workers" (
 );
 
 
-ALTER TABLE "public"."workers" OWNER TO "postgres";
-
-
-ALTER TABLE ONLY "public"."profiles"
-    ADD CONSTRAINT "profiles_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "public"."projects"
-    ADD CONSTRAINT "projects_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "public"."time_entries"
-    ADD CONSTRAINT "time_entries_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "public"."translations"
-    ADD CONSTRAINT "translations_key_language_key" UNIQUE ("key", "language");
-
-
-
-ALTER TABLE ONLY "public"."translations"
-    ADD CONSTRAINT "translations_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "public"."user_language_preferences"
-    ADD CONSTRAINT "user_language_preferences_pkey" PRIMARY KEY ("user_id");
-
-
-
-ALTER TABLE ONLY "public"."user_roles"
-    ADD CONSTRAINT "user_roles_pkey" PRIMARY KEY ("id");
-
-
-
-ALTER TABLE ONLY "public"."user_roles"
-    ADD CONSTRAINT "user_roles_user_id_key" UNIQUE ("user_id");
-
-
-
-ALTER TABLE ONLY "public"."workers"
-    ADD CONSTRAINT "workers_pkey" PRIMARY KEY ("id");
 
 
 
@@ -310,35 +265,6 @@ CREATE OR REPLACE TRIGGER "handle_updated_at" BEFORE UPDATE ON "public"."time_en
 
 CREATE OR REPLACE TRIGGER "handle_updated_at" BEFORE UPDATE ON "public"."workers" FOR EACH ROW EXECUTE FUNCTION "public"."handle_updated_at"();
 
-
-
-ALTER TABLE ONLY "public"."profiles"
-    ADD CONSTRAINT "profiles_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id");
-
-
-
-ALTER TABLE ONLY "public"."time_entries"
-    ADD CONSTRAINT "time_entries_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id");
-
-
-
-ALTER TABLE ONLY "public"."time_entries"
-    ADD CONSTRAINT "time_entries_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE CASCADE;
-
-
-
-ALTER TABLE ONLY "public"."time_entries"
-    ADD CONSTRAINT "time_entries_worker_id_fkey" FOREIGN KEY ("worker_id") REFERENCES "public"."workers"("id");
-
-
-
-ALTER TABLE ONLY "public"."user_language_preferences"
-    ADD CONSTRAINT "user_language_preferences_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
-
-
-
-ALTER TABLE ONLY "public"."user_roles"
-    ADD CONSTRAINT "user_roles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
 
 
 
