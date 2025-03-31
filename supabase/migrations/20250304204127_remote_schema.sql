@@ -251,9 +251,6 @@ CREATE TABLE IF NOT EXISTS "public"."workers" (
 
 
 
-CREATE INDEX "idx_user_roles_user_id" ON "public"."user_roles" USING "btree" ("user_id");
-
-
 
 CREATE OR REPLACE TRIGGER "handle_updated_at" BEFORE UPDATE ON "public"."projects" FOR EACH ROW EXECUTE FUNCTION "public"."handle_updated_at"();
 
@@ -265,120 +262,6 @@ CREATE OR REPLACE TRIGGER "handle_updated_at" BEFORE UPDATE ON "public"."time_en
 
 CREATE OR REPLACE TRIGGER "handle_updated_at" BEFORE UPDATE ON "public"."workers" FOR EACH ROW EXECUTE FUNCTION "public"."handle_updated_at"();
 
-
-
-
-CREATE POLICY "Allow office and owner roles to delete workers" ON "public"."workers" FOR DELETE TO "authenticated" USING ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = ANY (ARRAY['owner'::"public"."user_role", 'office'::"public"."user_role"])));
-
-
-
-CREATE POLICY "Allow office and owner roles to insert projects" ON "public"."projects" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = ANY (ARRAY['owner'::"public"."user_role", 'office'::"public"."user_role"])));
-
-
-
-CREATE POLICY "Allow office and owner roles to insert workers" ON "public"."workers" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = ANY (ARRAY['owner'::"public"."user_role", 'office'::"public"."user_role"])));
-
-
-
-CREATE POLICY "Allow office and owner roles to update projects" ON "public"."projects" FOR UPDATE TO "authenticated" USING ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = ANY (ARRAY['owner'::"public"."user_role", 'office'::"public"."user_role"])));
-
-
-
-CREATE POLICY "Allow office and owner roles to update time entries" ON "public"."time_entries" FOR UPDATE TO "authenticated" USING ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = ANY (ARRAY['owner'::"public"."user_role", 'office'::"public"."user_role"])));
-
-
-
-CREATE POLICY "Allow office and owner roles to update workers" ON "public"."workers" FOR UPDATE TO "authenticated" USING ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = ANY (ARRAY['owner'::"public"."user_role", 'office'::"public"."user_role"])));
-
-
-
-CREATE POLICY "Allow read access to all authenticated users" ON "public"."projects" FOR SELECT TO "authenticated" USING (true);
-
-
-
-CREATE POLICY "Allow read access to all authenticated users" ON "public"."time_entries" FOR SELECT TO "authenticated" USING (true);
-
-
-
-CREATE POLICY "Allow read access to all authenticated users" ON "public"."workers" FOR SELECT TO "authenticated" USING (true);
-
-
-
-CREATE POLICY "Allow teamlead role to insert workers" ON "public"."workers" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = 'teamlead'::"public"."user_role"));
-
-
-
-CREATE POLICY "Allow teamlead, office and owner roles to insert time entries" ON "public"."time_entries" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "user_roles"."role"
-   FROM "public"."user_roles"
-  WHERE ("user_roles"."user_id" = "auth"."uid"())) = ANY (ARRAY['owner'::"public"."user_role", 'office'::"public"."user_role", 'teamlead'::"public"."user_role"])));
-
-
-
-CREATE POLICY "Users can insert own profile" ON "public"."profiles" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "id"));
-
-
-
-CREATE POLICY "Users can update own profile" ON "public"."profiles" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "id"));
-
-
-
-CREATE POLICY "Users can view own profile" ON "public"."profiles" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "id"));
-
-
-
-ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
-
-
-ALTER TABLE "public"."projects" ENABLE ROW LEVEL SECURITY;
-
-
-ALTER TABLE "public"."time_entries" ENABLE ROW LEVEL SECURITY;
-
-
-ALTER TABLE "public"."translations" ENABLE ROW LEVEL SECURITY;
-
-
-CREATE POLICY "translations_read_policy" ON "public"."translations" FOR SELECT TO "authenticated" USING (true);
-
-
-
-ALTER TABLE "public"."user_language_preferences" ENABLE ROW LEVEL SECURITY;
-
-
-CREATE POLICY "user_language_preferences_insert_policy" ON "public"."user_language_preferences" FOR INSERT TO "authenticated" WITH CHECK (("auth"."uid"() = "user_id"));
-
-
-
-CREATE POLICY "user_language_preferences_read_policy" ON "public"."user_language_preferences" FOR SELECT TO "authenticated" USING (("auth"."uid"() = "user_id"));
-
-
-
-CREATE POLICY "user_language_preferences_update_policy" ON "public"."user_language_preferences" FOR UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id")) WITH CHECK (("auth"."uid"() = "user_id"));
-
-
-
-ALTER TABLE "public"."user_roles" ENABLE ROW LEVEL SECURITY;
-
-
-CREATE POLICY "users_read_own_role" ON "public"."user_roles" FOR SELECT USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
-
-
-
-ALTER TABLE "public"."workers" ENABLE ROW LEVEL SECURITY;
 
 
 
