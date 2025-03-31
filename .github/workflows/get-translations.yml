@@ -31,6 +31,12 @@ jobs:
         run: |
           mv seed.sql supabase/seed.sql
 
+      - name: Append additional SQL statements for buckets
+        run: |
+          echo "INSERT INTO storage.buckets (id, name, public) VALUES ('purchaseInvoices', 'purchaseInvoices', false) ON CONFLICT (id) DO NOTHING;" >> supabase/seed.sql
+          echo "INSERT INTO storage.buckets (id, name, public) VALUES ('projectInfo', 'projectFiles', false) ON CONFLICT (id) DO NOTHING;" >> supabase/seed.sql
+          echo "INSERT INTO storage.buckets (id, name, public) VALUES ('customerInfo', 'customerFiles', false) ON CONFLICT (id) DO NOTHING;" >> supabase/seed.sql
+  
       - name: Commit and Push Changes
         run: |
           git config --local user.email "action@github.com"
