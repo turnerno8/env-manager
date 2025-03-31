@@ -72,31 +72,6 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 
 
-CREATE TYPE "public"."project_status" AS ENUM (
-    'active',
-    'completed',
-    'on_hold'
-);
-
-
-ALTER TYPE "public"."project_status" OWNER TO "postgres";
-
-
-CREATE TYPE "public"."supported_language" AS ENUM (
-    'en',
-    'de',
-    'ro'
-);
-
-
-ALTER TYPE "public"."supported_language" OWNER TO "postgres";
-
-
-CREATE TYPE "public"."user_role" AS ENUM (
-    'owner',
-    'office',
-    'teamlead'
-);
 
 
 ALTER TYPE "public"."user_role" OWNER TO "postgres";
