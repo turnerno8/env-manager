@@ -15,6 +15,7 @@ on:
           - ATAKER-PROD
           - DEMO
           - MUT-PROD
+          - DEV
 
 jobs:
   deploy:
