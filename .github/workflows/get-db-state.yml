@@ -1,11 +1,22 @@
 name: Get DB State
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy DB to'
+        required: true
+        default: 'DEV'
+        type: choice
+        options:
+          - ATAKER-PROD
+          - DEMO
+          - MUT-PROD
+          - DEV
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: DEV
+    environment: ${{ github.event.inputs.environment }}
 
     env:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -21,7 +32,7 @@ jobs:
           version: latest
 
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
-      - run: supabase db pull
+      - run: supabase db dump > supabase/schemas/prod.sql
       - name: Commit and Push Changes
         run: |
           git config --local user.email "action@github.com"

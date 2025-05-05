@@ -34,5 +34,7 @@ jobs:
           version: latest
 
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
+      - run: supabase db diff 
+      - run: supabase migration up
       - run: supabase db push --include-seed --debug
       - run: supabase functions deploy --project-ref $SUPABASE_PROJECT_ID
